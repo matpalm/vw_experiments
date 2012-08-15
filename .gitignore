@@ -1,0 +1,12 @@
+20news-bydate.tar.gz
+20news-bydate-train
+20news-bydate-test
+group_id.train.tsv
+group_id.test.tsv
+model
+predictions
+*pyc
+train.oaa
+test.oaa
+classes.actual
+classes.predicted
