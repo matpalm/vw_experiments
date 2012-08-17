@@ -10,10 +10,13 @@ input_dir = sys.argv[1]
 sent_tokenizer = PunktSentenceTokenizer()
 token_tokenizer = WordPunctTokenizer()
 
-group_seq = Sequence(1)
+# first collect list of all groups
+groups = []
 for group in os.listdir(input_dir):
-    group_id = group_seq.id_for(group)
-    sys.stderr.write("%s\t%s\n" % (group, group_id))
+    groups.append(group)
+
+# then reiterate and fetch all files
+for group in groups:
     for article_path in os.listdir("%s/%s" % (input_dir, group)):
         # stitch article into a single string
         article = ""
@@ -29,11 +32,13 @@ for group in os.listdir(input_dir):
             tokens = map(lambda t: t.lower().replace(":","").replace("|",""), tokens)  # : and | reserved for vw format
             tokens = filter(lambda t: len(t) > 3, tokens)
             all_tokens.update(tokens)
-        # write them out
-        sys.stdout.write("%s 1 '%s_%s |" % (group_id, group, article_path))  # group weight=1 label
+        # collect up example... everything but group namespace feature
+        example = "1 1 '%s_%s |tokens" % (group, article_path)  # 1 weight=1 label
         for token in all_tokens:
-            sys.stdout.write(" %s" % token)
-        sys.stdout.write("\n")
+            example += " %s:0.5" % token
+        # followed by single group feature (with weighting = magic 10, therefore quadratic features have weight 5)
+        for group_class in groups:
+            print "%s |group %s:10" % (example, group_class)
 
 
 

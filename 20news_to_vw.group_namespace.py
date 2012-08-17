@@ -29,10 +29,12 @@ for group in os.listdir(input_dir):
             tokens = map(lambda t: t.lower().replace(":","").replace("|",""), tokens)  # : and | reserved for vw format
             tokens = filter(lambda t: len(t) > 3, tokens)
             all_tokens.update(tokens)
-        # write them out
-        sys.stdout.write("%s 1 '%s_%s |" % (group_id, group, article_path))  # group weight=1 label
+        # write out token features ; weight of 0.5
+        sys.stdout.write("1 1 '%s_%s |tokens" % (group, article_path))  # 1 weight=1 label
         for token in all_tokens:
-            sys.stdout.write(" %s" % token)
+            sys.stdout.write(" %s:0.5" % token)
+        # followed by single group feature (with weighting = magic 10, therefore quadratic features have weight 5)
+        sys.stdout.write(" |group %s:10" % group)
         sys.stdout.write("\n")
 
 

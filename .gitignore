@@ -10,3 +10,6 @@ train.oaa
 test.oaa
 classes.actual
 classes.predicted
+test.group_namespace
+train.group_namespace
+.cache
